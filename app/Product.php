@@ -10,7 +10,7 @@ class Product extends Model
 
     public function labels()
     {
-        return $this->belongsToMany('App\Label');
+        return $this->belongsToMany('App\Label')->withTimestamps();
     }
 
     public function reviews()
