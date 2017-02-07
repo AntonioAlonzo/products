@@ -15,12 +15,7 @@ class CreateProductsLabelsTable extends Migration
     {
         Schema::create('products_labels', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('product_id')->unsigned();
-            $table->integer('label_id')->unsigned();
             $table->timestamps();
-
-            $table->foreign('product_id')->references('id')->on('products');
-            $table->foreign('label_id')->references('id')->on('labels');
         });
     }
 
@@ -31,14 +26,6 @@ class CreateProductsLabelsTable extends Migration
      */
     public function down()
     {
-        Schema::table('products_labels', function (Blueprint $table) {
-            $table->dropForeign(['product_id']);
-            $table->dropColumn('product_id');
-
-            $table->dropForeign(['review_id']);
-            $table->dropColumn('review_id');
-        });
-
         Schema::dropIfExists('products_labels');
     }
 }
