@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AlterProductsLabelsTableAddProductForeignKey extends Migration
+class AlterLabelProductTableAddProductForeignKey extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class AlterProductsLabelsTableAddProductForeignKey extends Migration
      */
     public function up()
     {
-        Schema::table('products_labels', function (Blueprint $table) {
+        Schema::table('label_product', function (Blueprint $table) {
             $table->integer('product_id')->unsigned();
 
             $table->foreign('product_id')->references('id')->on('products');
@@ -27,7 +27,7 @@ class AlterProductsLabelsTableAddProductForeignKey extends Migration
      */
     public function down()
     {
-        Schema::table('products_labels', function (Blueprint $table) {
+        Schema::table('label_product', function (Blueprint $table) {
             $table->dropForeign(['product_id']);
             $table->dropColumn('product_id');
         });

@@ -11,9 +11,18 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        //$this->call(SellerAddressesTableSeeder::class);
-        //$this->call(SellersTableSeeder::class);
-        //$this->call(LabelsTableSeeder::class);
-        $this->call(ProductsTableSeeder::class);
+        $labels = factory(App\Label::class, 5)->create();
+        $sellers = factory(App\Seller::class, 2)
+            ->create()
+            ->each(function ($seller) use ($labels) {
+                factory(App\Product::class, 3)
+                    ->create(['seller_id' => $seller->id])
+                    ->each(function ($product) use ($labels) {
+                        $product->labels()->attach($labels[rand(0,4)]->id);
+                        $product->labels()->attach($labels[rand(0,4)]->id);
+
+                        factory(App\Review::class, 10)->create(['product_id' => $product->id]);
+                        });
+                    });
     }
 }

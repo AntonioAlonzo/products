@@ -27,8 +27,7 @@ $factory->define(\App\Product::class, function (Faker\Generator $faker) {
     return [
         'name' => $faker->word,
         'price' => $faker->randomFloat(2, 1, 1000),
-        'description' => $faker->text(),
-        'seller_id' => $faker->numberBetween(1, App\Seller::count())
+        'description' => $faker->text()
     ];
 });
 
@@ -47,11 +46,11 @@ $factory->define(\App\Review::class, function (Faker\Generator $faker) {
     ];
 });
 
-$factory->define(\App\Seller::class, function (Faker\Generator $faker) {
+$factory->define(\App\Seller::class, function (Faker\Generator $faker) {  
     return [
         'first_name' => $faker->firstName(),
         'last_name' => $faker->lastName,
-        'seller_address_id' => $faker->unique()->numberBetween(1, App\SellerAddress::count())
+        'seller_address_id' => factory(App\SellerAddress::class)->create()->id
     ];
 });
 
