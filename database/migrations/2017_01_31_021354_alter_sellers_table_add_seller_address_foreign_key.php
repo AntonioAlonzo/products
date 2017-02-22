@@ -16,7 +16,7 @@ class AlterSellersTableAddSellerAddressForeignKey extends Migration
         Schema::table('sellers', function (Blueprint $table) {
             $table->integer('seller_address_id')->unsigned();
 
-            $table->foreign('seller_address_id')->references('id')->on('seller_addresses');
+            $table->foreign('seller_address_id')->references('id')->on('seller_addresses')->onDelete('cascade');
         });
     }
 

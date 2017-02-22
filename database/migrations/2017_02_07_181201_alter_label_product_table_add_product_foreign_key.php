@@ -16,7 +16,7 @@ class AlterLabelProductTableAddProductForeignKey extends Migration
         Schema::table('label_product', function (Blueprint $table) {
             $table->integer('product_id')->unsigned();
 
-            $table->foreign('product_id')->references('id')->on('products');
+            $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
         });
     }
 

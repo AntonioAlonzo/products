@@ -1,0 +1,19 @@
+{
+  "name": "products",
+  "description": "Tarea para clase de Laravel APIs",
+  "main": "",
+  "license": "MIT",
+  "homepage": "https://github.com/AntonioAlonzo/products",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "public/vendor/bower",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap": "^3.3.7"
+  }
+}
