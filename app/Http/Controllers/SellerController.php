@@ -23,18 +23,7 @@ class SellerController extends Controller
     {
         $sellers = Seller::all();
 
-        return View::make('sellers.index')
-        ->with('sellers', $sellers);
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        return View::make('sellers.create');
+        return $sellers;
     }
 
     /**
@@ -49,21 +38,7 @@ class SellerController extends Controller
         $seller->first_name = $request->first_name;
         $seller->last_name = $request->last_name;
 
-        $seller_address = new SellerAddress;
-        $seller_address->address = $request->address;
-        $seller_address->city = $request->city;
-        $seller_address->state = $request->state;
-        $seller_address->country = $request->country;
-        $seller_address->postal_code = $request->postal_code;
-
-        $seller_address->save();
-        $seller->seller_address_id = $seller_address->id;
-
         $seller->save();
-
-        Session::flash('message', 'Succesfully created seller!');
-
-        return Redirect::to('sellers');
     }
 
     /**
@@ -76,22 +51,7 @@ class SellerController extends Controller
     {
         $seller = Seller::find($id); 
 
-        return View::make('sellers.show')
-        ->with('seller', $seller);
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        $seller = Seller::find($id);
-
-        return View::make('sellers.edit')
-        ->with('seller', $seller);
+        return $seller;
     }
 
     /**
@@ -101,9 +61,32 @@ class SellerController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(StoreSeller $request, $id)
     {
-        //
+        $seller = Seller::find($id);
+        $seller->first_name = $request->first_name;
+        $seller->last_name = $request->last_name;
+
+        $seller->save();
+    }
+
+    /**
+     * Update the specified resource in storage partially.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function edit(Request $request, $id)
+    {
+        $this->validate($request, [
+            'first_name' => 'sometimes|max:255',
+            'last_name' => 'sometimes|max:255',
+        ]);
+
+        $seller = Seller::find($id);
+        $seller->fill($request->all());
+        $seller->save();
     }
 
     /**
@@ -115,10 +98,7 @@ class SellerController extends Controller
     public function destroy($id)
     {
         $seller = Seller::find($id);
+        $seller->sellerAddress()->first()->delete();
         $seller->delete();
-
-        Session::flash('message', 'Succesfully deleted seller!');
-
-        return Redirect::to('sellers');
     }
 }

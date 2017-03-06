@@ -8,9 +8,9 @@ class Seller extends Model
 {
     protected $fillable = ['first_name', 'last_name'];
 
-    public function address()
+    public function sellerAddress()
     {
-        return $this->hasOne('App\SellerAddress', 'foreign_key');
+        return $this->belongsTo('App\SellerAddress');
     }
 
     public function products()

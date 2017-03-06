@@ -14,6 +14,3 @@
 Route::get('/', function () {
     return view('welcome');
 });
-
-Route::resource('sellers', 'SellerController');
-Route::resource('products', 'ProductController');

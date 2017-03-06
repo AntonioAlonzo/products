@@ -26,11 +26,6 @@ class StoreSeller extends FormRequest
         return [
             'first_name' => 'required|max:255',
             'last_name' => 'required|max:255', 
-            'address' => 'required|max:255',
-            'city' => 'required|max:255',
-            'state' => 'required|max:255',
-            'country' => 'required|max:255',
-            'postal_code' => 'required|max:7',
         ];
     }
 }

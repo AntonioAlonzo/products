@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\View;
 
 use App\Product;
+use App\Label;
 
 use Session;
 use Redirect;
@@ -19,20 +20,9 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $products = Product::all();
+        $products = Product::with('labels')->get();
 
-        return View::make('products.index')
-        ->with('products', $products);
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+        return $products;
     }
 
     /**
@@ -43,7 +33,26 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $product = new Product;
+        $product->name = $request->name;
+        $product->price = $request->price;
+        $product->description = $request->description;
+        $product->seller_id = $request->seller_id;
+        $product->save();
+
+        foreach ($request->labels as $label) {
+            $existingLabel = Label::where('name', $label)->first();
+
+            if ($existingLabel) {
+                $product->labels()->attach($existingLabel->id);
+            } else {
+                $newLabel = new Label;
+                $newLabel->name = $label;
+                $newLabel->save();
+
+                $product->labels()->attach($newLabel->id);
+            }
+        }
     }
 
     /**
@@ -54,18 +63,7 @@ class ProductController extends Controller
      */
     public function show($id)
     {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
+        return Product::with('labels')->where('id', $id)->first();
     }
 
     /**
@@ -77,7 +75,37 @@ class ProductController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $this->validate($request, [
+            'name' => 'required|max:255',
+            'price' => 'required|max:255',
+            'description' => 'required|max:255',
+            'seller_id' => 'required',
+        ]);
+
+        $product = Product::find($id);
+        $product->fill($request->all());
+        $product->save();
+    }
+
+    /**
+     * Update the specified resource in storage partially.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function edit(Request $request, $id)
+    {
+        $this->validate($request, [
+            'name' => 'sometimes|max:255',
+            'price' => 'sometimes|max:255',
+            'description' => 'sometimes|max:255',
+            'seller_id' => 'sometimes',
+        ]);
+
+        $product = Product::find($id);
+        $product->fill($request->all());
+        $product->save();
     }
 
     /**
@@ -89,10 +117,7 @@ class ProductController extends Controller
     public function destroy($id)
     {
         $product = Product::find($id);
+        $product->reviews()->delete();
         $product->delete();
-
-        Session::flash('message', 'Succesfully deleted product!');
-
-        return Redirect::to('products');
     }
 }

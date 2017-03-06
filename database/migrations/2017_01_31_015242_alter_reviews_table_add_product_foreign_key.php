@@ -14,7 +14,7 @@ class AlterReviewsTableAddProductForeignKey extends Migration
     public function up()
     {
         Schema::table('reviews', function (Blueprint $table) {
-            $table->integer('product_id')->unsigned();
+            $table->integer('product_id')->unsigned()->nullable();
 
             $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
         });
